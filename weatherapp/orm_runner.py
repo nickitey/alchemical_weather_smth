@@ -42,6 +42,14 @@ def add_city(tg_id, city_name):
     session.commit()
 
 
+def get_user_city(tg_id):
+    session = Session()
+    user = session.query(User).filter(User.tg_id == tg_id).first()
+    if user.city is None:
+        return 'Город пользователя не задан.'
+    return user.city
+
+
 def add_weather_report(tg_id, city, temp, feels_like, wind_speed, pressure_mm):
     session = Session()
     user = session.query(User).filter(User.tg_id == tg_id).first()

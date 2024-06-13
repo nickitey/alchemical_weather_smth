@@ -1,11 +1,11 @@
 import sys
 
 import pytest
+
 sys.path.append('../weatherapp')
 sys.path.append('../')
 
 import weatherapp.orm_runner as orm
-
 
 test_counter = 0
 
@@ -19,6 +19,7 @@ def get_user_id():
 def get_user_city():
     return 'Moscow'
 
+
 @pytest.fixture()
 def get_weather_example():
     """
@@ -30,11 +31,11 @@ def get_weather_example():
     return "Белград", '21.19', '21.3', '0', '760'
 
 
-
 def test_add_tg_user(get_user_id):
     orm.add_user(get_user_id)
     session = orm.Session()
-    test_user_query = session.query(orm.User).filter_by(tg_id=get_user_id).first()
+    test_user_query = (session.query(orm.User)
+                       .filter_by(tg_id=get_user_id).first())
     assert test_user_query.tg_id == get_user_id
     global test_counter
     test_counter += 1
@@ -44,11 +45,19 @@ def test_add_tg_user(get_user_id):
 def test_add_user_city(get_user_id, get_user_city):
     orm.add_city(get_user_id, get_user_city)
     session = orm.Session()
-    test_user_query = session.query(orm.User).filter(orm.User.tg_id == get_user_id).first()
+    test_user_query = (session.query(orm.User)
+                       .filter(orm.User.tg_id == get_user_id).first())
     assert test_user_query.city == get_user_city
     global test_counter
     test_counter += 1
     print(f'Test # {test_counter} passed. User\'s city is updated.')
+
+
+def test_get_user_city():
+    new_user = 987654321
+    orm.add_user(new_user)
+    new_user_city = orm.get_user_city(new_user)
+    assert new_user_city == 'Город пользователя не задан.'
 
 
 def test_add_weather_report(get_user_id, get_weather_example):
@@ -65,4 +74,3 @@ def test_add_weather_report(get_user_id, get_weather_example):
     global test_counter
     test_counter += 1
     print(f'Test # {test_counter} passed. User\'s city is updated.')
-
