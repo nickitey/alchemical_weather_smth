@@ -6,6 +6,7 @@ sys.path.append('../')
 
 import weatherapp.orm_runner as orm
 
+
 test_counter = 0
 
 
@@ -17,6 +18,17 @@ def get_user_id():
 @pytest.fixture()
 def get_user_city():
     return 'Moscow'
+
+@pytest.fixture()
+def get_weather_example():
+    """
+    Возвращает кортеж тестовых данных о погоде в city_name
+    (за основу взят Белград 13 июня 2024 г.)
+    :return: Название города, температура, "ощущается как", скорость ветра,
+    атмосферное давление
+    """
+    return "Белград", '21.19', '21.3', '0', '760'
+
 
 
 def test_add_tg_user(get_user_id):
@@ -37,3 +49,20 @@ def test_add_user_city(get_user_id, get_user_city):
     global test_counter
     test_counter += 1
     print(f'Test # {test_counter} passed. User\'s city is updated.')
+
+
+def test_add_weather_report(get_user_id, get_weather_example):
+    city, temp, feels_like, wind_speed, pressure_mm = get_weather_example
+    orm.add_weather_report(get_user_id, city, temp, feels_like, wind_speed,
+                           pressure_mm)
+    session = orm.Session()
+    test_weather_query = (session.query(orm.WeatherReport)
+                          .filter(orm.WeatherReport.city == city)
+                          .first())
+    assert (test_weather_query.temp == temp
+            and test_weather_query.feels_like == feels_like
+            and test_weather_query.pressure_mm == pressure_mm)
+    global test_counter
+    test_counter += 1
+    print(f'Test # {test_counter} passed. User\'s city is updated.')
+

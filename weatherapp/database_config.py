@@ -20,6 +20,7 @@ class User(Base):
     connection_date = Column(DateTime, nullable=False, default=datetime.now)
     reports = relationship('WeatherReport', backref='report', lazy=True,
                            cascade='all, delete-orphan')
+
     def __repr__(self):
         return self.tg_id
 
@@ -31,7 +32,7 @@ class WeatherReport(Base):
     date = Column(DateTime, nullable=False, default=datetime.now)
     temp = Column(String(20), nullable=False)
     feels_like = Column(String(20), nullable=True)
-    wind_speed = Column(String(20), nullable=False)
+    wind_speed = Column(String(20), nullable=True)
     pressure_mm = Column(String(20), nullable=False)
     city = Column(String(50), nullable=False)
 
