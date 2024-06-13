@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 sys.path.insert(1, "../weatherapp")
 
-from weatherapp.main import GeoApp, WeatherApp
+from weatherapp.weather_app import GeoApp, WeatherApp
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
