@@ -82,3 +82,4 @@ def get_users_reports(tg_id):
     session = Session()
     user = session.query(User).filter(User.tg_id == tg_id).first()
     return user.reports
+
